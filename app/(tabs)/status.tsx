@@ -4,7 +4,7 @@ const image = { uri: '/assets/images/pexels-leonid.png' };
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import PendingScreen from '@/components/status-tabs/Pending';
 import ReciveScreen from '@/components/status-tabs/Recieve';
-import CancelScreen from '@/components/status-tabs/Cancel';
+import CancelScreen from '@/components/status-tabs/Done';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -15,10 +15,17 @@ export default function StatusScreen() {
 
     return (
         <View style={styles.container}>
-            <Tab.Navigator>
+            <Tab.Navigator screenOptions={{
+                lazy: true,
+                swipeEnabled: false,
+                tabBarScrollEnabled: true,
+                tabBarItemStyle: { width: 150 },
+                tabBarLabelStyle: { fontSize: 16 }
+            }}>
                 <Tab.Screen name="Chờ xác nhận" component={PendingScreen} />
-                <Tab.Screen name="Đã nhận" component={ReciveScreen} />
-                <Tab.Screen name="Đã hủy" component={CancelScreen} />
+                <Tab.Screen name="Đã xác nhận" component={PendingScreen} />
+                <Tab.Screen name="Đã nhận hàng" component={ReciveScreen} />
+                <Tab.Screen name="Hoàn thành" component={CancelScreen} />
             </Tab.Navigator>
         </View >
     )

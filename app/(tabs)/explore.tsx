@@ -5,8 +5,6 @@ import { useState } from 'react';
 import { StyleSheet, Image, Platform, View, Text, TextInput, TouchableOpacity, Button, ScrollView } from 'react-native';
 
 export default function TabTwoScreen() {
-  const [password, setPassword] = useState('');
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   return (
     <ScrollView>
