@@ -25,7 +25,6 @@ export const houseHoldService: any = {
 
     get: async function (scheduleState: ScheduleStateType) {
         const response = await httpRequestUtil.get(`${this.HouseHold_Get_URL}?scheduleState=${scheduleState}`);
-        console.log("🚀 ~ response:", response)
         return response
     },
 

@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Platform, View, Text, TextInput, TouchableOpacity, Button, ScrollView, RefreshControl } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import { ItemStatus } from './ItemStatus';
 import React, { useEffect, useState } from 'react';
 import { houseHoldService } from '@/service/houseHold';
@@ -6,7 +6,7 @@ import { ScheduleStateType } from '@/constant/schedule';
 import useInforUserStore from '@/store/useStoreUser';
 import { UserRole } from '@/constant/user';
 
-export default function PendingScreen() {
+export default function DoneScreen() {
     const {role} = useInforUserStore((state:any) => state.role);
     const [arr, setArr] = useState([]);
     const [refreshing, setRefreshing] = React.useState(false);
@@ -39,12 +39,12 @@ export default function PendingScreen() {
                     arr.map((item, index) => (
                         <View key={index}>
                             <View style={styles.content}>
-                                <ItemStatus style={styles.titleStatus} title="Chờ xác nhận" item={item} />
+                                <ItemStatus style={styles.titleStatus} title="Đã lấy hàng" item={item} />
                                 {
                                     role == UserRole.DeliveryStaff && (
                                     <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", paddingBottom: 10, paddingRight: 10, borderTopWidth: 1, borderColor: "#ccc" }}>
                                         <TouchableOpacity style={styles.btnSubmit} onPress={handleDeliveryStaffAccept}>
-                                            <Text style={{ textAlign: "center", color: "#fff", fontSize: 17 }}>Nhận lịch</Text>
+                                            <Text style={{ textAlign: "center", color: "#fff", fontSize: 17 }}>Lấy Hàng</Text>
                                         </TouchableOpacity>
                                     </View>)
                                 }
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         height: "100%",
         gap: 10,
     },
-    titleStatus: { color: "#f7a000", fontSize: 16, fontWeight: 500 },
+    titleStatus: { color: "rgb(29, 185, 84)", fontSize: 16, fontWeight: 500 },
     content: {
         marginTop: 10,
         backgroundColor: "#fff",

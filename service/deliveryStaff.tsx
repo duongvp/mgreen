@@ -12,12 +12,10 @@ export const deliveryStaffService = {
         return response
     },
 
-
     patchUnAcceptSchedule: async function (id: any) {
         const response = await httpRequestUtil.patchId(`${this.DeliveryStaff_UnAccept_URL}/${id}`);
         return response
     },
-
 
     patchConfirmReceiveSchedule: async function (id: any) {
         const response = await httpRequestUtil.patchId(`${this.DeliveryStaff_Confirm_URL}/${id}`);
