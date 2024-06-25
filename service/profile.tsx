@@ -10,7 +10,7 @@ export const ProfileService = {
     },
 
     patch: async function (body: any) {
-        const response = await httpRequestUtil.patch(this.profile_URL, body);
+        const response = await httpRequestUtil.patch(this.profile_role_URL, body);
         return response
     },
 

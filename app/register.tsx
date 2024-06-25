@@ -39,6 +39,7 @@ export default function Page() {
             router.push('/role')
             switch (res.status) {
                 case 200:
+                    const res = await AuthService.login(data);
                     router.push('/role')
                     break;
                 case 500:
