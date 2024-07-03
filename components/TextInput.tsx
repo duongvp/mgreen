@@ -9,6 +9,7 @@ interface TextInputProps<T extends FieldValues> extends RNTextInputProps {
 	name: Path<T>;
 	isShowEye?: boolean;
 	control: Control<T>;
+	styleB?: any
 }
 
 export const TextInput = <T extends FieldValues>(props: TextInputProps<T>) => {
@@ -18,6 +19,7 @@ export const TextInput = <T extends FieldValues>(props: TextInputProps<T>) => {
 		name,
 		isShowEye,
 		control,
+		styleB,
 		...TextInputProps
 	} = props;
 
@@ -36,7 +38,7 @@ export const TextInput = <T extends FieldValues>(props: TextInputProps<T>) => {
 				render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
 					<View style={{ position: 'relative' }}>
 						<RNTextInput
-							style={[styles.input, isFocused && styles.focusedInput]}
+							style={[styles.input, styleB && styleB, isFocused && styles.focusedInput]}
 							onChangeText={onChange}
 							onFocus={() => setIsFocused(true)}
 							onBlur={() => {

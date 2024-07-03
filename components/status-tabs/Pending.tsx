@@ -5,9 +5,14 @@ import { houseHoldService } from '@/service/houseHold';
 import { ScheduleStateType } from '@/constant/schedule';
 import useInforUserStore from '@/store/useStoreUser';
 import { UserRole } from '@/constant/user';
+import { deliveryStaffService } from '@/service/deliveryStaff';
+import { useNavigation } from '@react-navigation/native';
+import { StaffService } from '@/service/staff';
 
 export default function PendingScreen() {
-    const {role} = useInforUserStore((state:any) => state.role);
+    const navigation = useNavigation();
+    const [check, setCheck] = useState(false)
+    const role = useInforUserStore((state: any) => state.role);
     const [arr, setArr] = useState([]);
     const [refreshing, setRefreshing] = React.useState(false);
 
@@ -19,15 +24,24 @@ export default function PendingScreen() {
     }, []);
     useEffect(() => {
         const fetchApi = async () => {
-            const res = await houseHoldService.get(ScheduleStateType.Pending)
+            let res
+            if (role == UserRole.HouseHold) {
+                res = await houseHoldService.get(ScheduleStateType.Pending)
+            } else if (role == UserRole.DeliveryStaff) {
+                res = await deliveryStaffService.get(ScheduleStateType.Pending)
+            } else if (role == UserRole.CollectorStaff) {
+                res = await StaffService.get(ScheduleStateType.Pending)
+            }
             const data = await res.json();
             setArr(data)
         }
         fetchApi()
-    }, [refreshing])
+    }, [refreshing, check])
 
-    const handleDeliveryStaffAccept = () => {
-      
+    const handleDeliveryStaffAccept = async (id: any) => {
+        await deliveryStaffService.patchAcceptSchedule(id)
+        setCheck(!check)
+        // navigation.navigate('Đã xác nhận')
     }
 
     return (
@@ -36,17 +50,17 @@ export default function PendingScreen() {
         }>
             <View style={styles.container}>
                 {
-                    arr.map((item, index) => (
+                    arr.map((item: any, index) => (
                         <View key={index}>
                             <View style={styles.content}>
-                                <ItemStatus style={styles.titleStatus} title="Chờ xác nhận" item={item} />
+                                <ItemStatus style={styles.titleStatus} title="Pending" item={item} />
                                 {
                                     role == UserRole.DeliveryStaff && (
-                                    <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", paddingBottom: 10, paddingRight: 10, borderTopWidth: 1, borderColor: "#ccc" }}>
-                                        <TouchableOpacity style={styles.btnSubmit} onPress={handleDeliveryStaffAccept}>
-                                            <Text style={{ textAlign: "center", color: "#fff", fontSize: 17 }}>Nhận lịch</Text>
-                                        </TouchableOpacity>
-                                    </View>)
+                                        <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", paddingVertical: 3, paddingBottom: 6, marginHorizontal: 12, borderTopWidth: 1, borderColor: "#F6F5F5" }}>
+                                            <TouchableOpacity style={styles.btnSubmit} onPress={() => handleDeliveryStaffAccept(item.id)}>
+                                                <Text style={{ textAlign: "center", color: "#fff", fontSize: 14, fontWeight: 500 }}>Accept</Text>
+                                            </TouchableOpacity>
+                                        </View>)
                                 }
                             </View>
                         </View>
@@ -66,9 +80,25 @@ const styles = StyleSheet.create({
     },
     titleStatus: { color: "#f7a000", fontSize: 16, fontWeight: 500 },
     content: {
-        marginTop: 10,
+        borderLeftColor: "#f7a000",
+        borderLeftWidth: 4,
+        marginTop: 6,
+        marginHorizontal: 8,
+        borderRadius: 6,
         backgroundColor: "#fff",
         height: "auto",
+        ...Platform.select({
+            ios: {
+                shadowColor: "black",
+                shadowOffset: { width: 0, height: 3 },
+                backgroundColor: 'white',
+                shadowOpacity: 0.2,
+                shadowRadius: 7,
+            },
+            android: {
+                elevation: 6, // Increase elevation to make the shadow more visible
+            }
+        }),
     },
     btnSubmit: {
         marginTop: 5,

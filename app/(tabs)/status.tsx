@@ -5,6 +5,8 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import PendingScreen from '@/components/status-tabs/Pending';
 import ReciveScreen from '@/components/status-tabs/Recieve';
 import CancelScreen from '@/components/status-tabs/Done';
+import DeliveryAcceptedScreen from '@/components/status-tabs/DeliveryAccepted';
+import StaffReciveScreen from '@/components/status-tabs/StaffRecieve';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -17,15 +19,16 @@ export default function StatusScreen() {
         <View style={styles.container}>
             <Tab.Navigator screenOptions={{
                 lazy: true,
-                swipeEnabled: false,
+                swipeEnabled: true,
                 tabBarScrollEnabled: true,
-                tabBarItemStyle: { width: 150 },
-                tabBarLabelStyle: { fontSize: 16 }
+                tabBarItemStyle: { width: 130 },
+                tabBarLabelStyle: { fontSize: 15 },
             }}>
-                <Tab.Screen name="Chờ xác nhận" component={PendingScreen} />
-                <Tab.Screen name="Đã xác nhận" component={PendingScreen} />
-                <Tab.Screen name="Đã nhận hàng" component={ReciveScreen} />
-                <Tab.Screen name="Hoàn thành" component={CancelScreen} />
+                <Tab.Screen name="Pending" component={PendingScreen} />
+                <Tab.Screen name="Confirm" component={DeliveryAcceptedScreen} />
+                {/* <Tab.Screen name="Đã nhận hàng" component={ReciveScreen} /> */}
+                <Tab.Screen name="Delivering" component={StaffReciveScreen} />
+                <Tab.Screen name="Success" component={CancelScreen} />
             </Tab.Navigator>
         </View >
     )

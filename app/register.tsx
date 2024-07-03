@@ -36,11 +36,10 @@ export default function Page() {
     const onSubmit: SubmitHandler<IFormValues> = async (data) => {
         try {
             const res = await AuthService.register(data.email, data.password);
-            router.push('/role')
             switch (res.status) {
                 case 200:
                     const res = await AuthService.login(data);
-                    router.push('/role')
+                    router.push('/home')
                     break;
                 case 500:
                     setErr('OOP! Connect server timeout !')
@@ -62,10 +61,16 @@ export default function Page() {
     return (
         <View style={styles.container}>
             <View>
-                <Image
-                    style={styles.banner}
-                    source={{ uri: '/assets/images/image1.png' }}
-                />
+                <View>
+                    <Image
+                        style={styles.banner}
+                        source={require('../assets/images/image1.png')}
+                    />
+                    <Image
+                        style={styles.bannerAbstract}
+                        source={require('../assets/images/Pattern.png')}
+                    />
+                </View>
                 <View style={styles.title}>
                     <Text style={[styles.titleHeader, styles.login]}>Create Account</Text>
                     <Text style={[styles.titleHeader]}>Create an account so you can {"\n"}explore all the existing jobs</Text>
@@ -111,6 +116,11 @@ const styles = StyleSheet.create({
     banner: {
         width: '100%',
         height: 270
+    },
+    bannerAbstract: {
+        width: "100%",
+        top: 50,
+        position: "absolute"
     },
     title: {
         position: 'absolute',

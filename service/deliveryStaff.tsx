@@ -1,3 +1,4 @@
+import { ScheduleStateType } from "@/constant/schedule";
 import { httpRequestUtil } from "@/utils/HttpRequestUtils";
 
 export const deliveryStaffService = {
@@ -17,13 +18,13 @@ export const deliveryStaffService = {
         return response
     },
 
-    patchConfirmReceiveSchedule: async function (id: any) {
-        const response = await httpRequestUtil.patchId(`${this.DeliveryStaff_Confirm_URL}/${id}`);
+    patchConfirmReceiveSchedule: async function (id: any, realQuantity: any) {
+        const response = await httpRequestUtil.patch(`${this.DeliveryStaff_Confirm_URL}/${id}`, { realQuantity: realQuantity });
         return response
     },
 
-    get: async function () {
-        const response = await httpRequestUtil.get(this.DeliveryStaff_Get_URL);
+    get: async function (scheduleState: ScheduleStateType) {
+        const response = await httpRequestUtil.get(`${this.DeliveryStaff_Get_URL}?scheduleState=${scheduleState}`);
         return response
     },
 

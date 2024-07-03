@@ -9,7 +9,7 @@ interface TProps {
     setDate: React.Dispatch<React.SetStateAction<selectDate>>
 }
 
-export const DatePickerCustom = ({ date, minimumDate, setDate }: TProps) => {
+export const TimePicker = ({ date, minimumDate, setDate }: TProps) => {
     const timeId = useId()
     const onChange = (event: DateTimePickerEvent, selectedDate: selectDate) => {
         console.log("🚀 ~ onChange ~ selectedDate:", selectedDate)
@@ -21,7 +21,7 @@ export const DatePickerCustom = ({ date, minimumDate, setDate }: TProps) => {
         <DateTimePicker
             testID={timeId}
             value={date!}
-            mode={"date"}
+            mode={"time"}
             onChange={onChange}
             {...(minimumDate ? { minimumDate } : {})}
         />

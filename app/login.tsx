@@ -25,10 +25,13 @@ const schema = yup.object().shape({
 });
 
 export default function Page() {
-	const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 	const [err, setErr] = useState('')
 	const { control, handleSubmit, formState: { errors } } = useForm<IFormValues>({
 		resolver: yupResolver(schema),
+		defaultValues: {
+			email: 'Test16@gmail.com',
+			password: 'Admin123@'
+		}
 	});
 
 	const onSubmit: SubmitHandler<IFormValues> = async (data) => {
@@ -36,7 +39,8 @@ export default function Page() {
 			const res = await AuthService.login(data);
 			switch (res.status) {
 				case 200:
-					router.push('/home')
+					router.back()
+					router.replace('/home')
 					break;
 				case 500:
 					setErr('OOP! Connect server timeout !')
@@ -58,10 +62,16 @@ export default function Page() {
 	return (
 		<View style={styles.container}>
 			<View>
-				<Image
-					style={styles.banner}
-					source={{ uri: '/assets/images/image1.png' }}
-				/>
+				<View>
+					<Image
+						style={styles.banner}
+						source={require('../assets/images/image1.png')}
+					/>
+					<Image
+						style={styles.bannerAbstract}
+						source={require('../assets/images/Pattern.png')}
+					/>
+				</View>
 				<View style={styles.title}>
 					<Text style={[styles.titleHeader, styles.login]}>Login here</Text>
 				</View>
@@ -92,6 +102,7 @@ export default function Page() {
 		</View >
 	);
 }
+/* Rectangle 7 */
 
 const styles = StyleSheet.create({
 	container: {
@@ -100,6 +111,11 @@ const styles = StyleSheet.create({
 	banner: {
 		width: '100%',
 		height: 270
+	},
+	bannerAbstract: {
+		width: "100%",
+		top: 50,
+		position: "absolute"
 	},
 	title: {
 		position: 'absolute',

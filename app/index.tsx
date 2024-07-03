@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { Image, StyleSheet, Platform, ImageBackground, Text, View, Button, Alert, TouchableOpacity } from 'react-native';
 
-const image = { uri: '/assets/images/pexels-leonid.png' };
+const image = '../assets/images/pexels-leonid.png';
 
 export default function Page() {
     const handlePress = () => {
@@ -14,11 +14,11 @@ export default function Page() {
 
     return (
         <View style={styles.container}>
-            <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-                <Image source={{ uri: '/assets/images/rectangle.png' }} style={styles.tinyLogo} />
+            <ImageBackground source={require(image)} resizeMode="cover" style={styles.image}>
+                <Image source={require('../assets/images/rectangle.png')} style={styles.tinyLogo} />
                 <View style={styles.content}>
-                    <Text style={styles.title}>Selamat Datang</Text>
-                    <Text style={styles.text}>Mulai untuk menjadi penyelamat bumi!</Text>
+                    <Text style={styles.title}>Viet Nam Green</Text>
+                    <Text style={styles.text}>Today, recycle for a better tommorow!</Text>
                     <TouchableOpacity onPress={handlePress} style={[styles.button, styles.buttonLogin]}>
                         <Text style={[styles.buttonText, styles.buttonTextLogin]}>Login</Text>
                     </TouchableOpacity>
@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
         right: 30
     },
     tinyLogo: {
+        width: "100%",
         position: 'absolute',
         top: 0,
         bottom: 0,
@@ -100,6 +101,6 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderStyle: 'solid',
         borderWidth: 1,
-        marginTop: 30
+        marginTop: 16
     }
 });

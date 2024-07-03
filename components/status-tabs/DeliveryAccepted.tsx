@@ -5,9 +5,14 @@ import { houseHoldService } from '@/service/houseHold';
 import { ScheduleStateType } from '@/constant/schedule';
 import useInforUserStore from '@/store/useStoreUser';
 import { UserRole } from '@/constant/user';
+import { deliveryStaffService } from '@/service/deliveryStaff';
+import { StaffService } from '@/service/staff';
+import ModalQuantity from '../popup/ModalQuantity';
 
 export default function DeliveryAcceptedScreen() {
-    const {role} = useInforUserStore((state:any) => state.role);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [idOrder, setIdOrder] = useState(false)
+    const role = useInforUserStore((state: any) => state.role);
     const [arr, setArr] = useState([]);
     const [refreshing, setRefreshing] = React.useState(false);
 
@@ -17,17 +22,26 @@ export default function DeliveryAcceptedScreen() {
             setRefreshing(false);
         }, 500);
     }, []);
+
     useEffect(() => {
         const fetchApi = async () => {
-            const res = await houseHoldService.get(ScheduleStateType.Pending)
+            let res
+            if (role == UserRole.HouseHold) {
+                res = await houseHoldService.get(ScheduleStateType.DeliveryAccepted)
+            } else if (role == UserRole.DeliveryStaff) {
+                res = await deliveryStaffService.get(ScheduleStateType.DeliveryAccepted)
+            } else if (role == UserRole.CollectorStaff) {
+                res = await StaffService.get(ScheduleStateType.DeliveryAccepted)
+            }
             const data = await res.json();
             setArr(data)
         }
-        fetchApi()
-    }, [refreshing])
+        !modalVisible && fetchApi()
+    }, [refreshing, modalVisible])
 
-    const handleDeliveryStaffAccept = () => {
-      
+    const handleDeliveryStaffAccept = async (id: any) => {
+        setIdOrder(id)
+        setModalVisible(true)
     }
 
     return (
@@ -36,23 +50,32 @@ export default function DeliveryAcceptedScreen() {
         }>
             <View style={styles.container}>
                 {
-                    arr.map((item, index) => (
+                    arr.map((item: any, index) => (
                         <View key={index}>
                             <View style={styles.content}>
-                                <ItemStatus style={styles.titleStatus} title="Đã xác nhận" item={item} />
+                                <ItemStatus style={styles.titleStatus} title="Confirm" item={item} />
+                                {/* {
+                                    role == UserRole.DeliveryStaff && (
+                                        <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", paddingBottom: 10, paddingRight: 10, borderTopWidth: 1, borderColor: "#ccc" }}>
+                                            <TouchableOpacity style={styles.btnSubmit} onPress={() => handleDeliveryStaffAccept(item.id)}>
+                                                <Text style={{ textAlign: "center", color: "#fff", fontSize: 17 }}>Lấy Hàng</Text>
+                                            </TouchableOpacity>
+                                        </View>)
+                                } */}
                                 {
                                     role == UserRole.DeliveryStaff && (
-                                    <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", paddingBottom: 10, paddingRight: 10, borderTopWidth: 1, borderColor: "#ccc" }}>
-                                        <TouchableOpacity style={styles.btnSubmit} onPress={handleDeliveryStaffAccept}>
-                                            <Text style={{ textAlign: "center", color: "#fff", fontSize: 17 }}>Lấy Hàng</Text>
-                                        </TouchableOpacity>
-                                    </View>)
+                                        <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", paddingVertical: 3, paddingBottom: 6, marginHorizontal: 12, borderTopWidth: 1, borderColor: "#F6F5F5" }}>
+                                            <TouchableOpacity style={styles.btnSubmit} onPress={() => handleDeliveryStaffAccept(item.id)}>
+                                                <Text style={{ textAlign: "center", color: "#fff", fontSize: 14, fontWeight: 500 }}>Received</Text>
+                                            </TouchableOpacity>
+                                        </View>)
                                 }
                             </View>
                         </View>
                     ))
                 }
             </View>
+            <ModalQuantity modalVisible={modalVisible} idOrder={idOrder} setModalVisible={setModalVisible} />
         </ScrollView>
     );
 }
@@ -64,11 +87,27 @@ const styles = StyleSheet.create({
         height: "100%",
         gap: 10,
     },
-    titleStatus: { color: "#f7a000", fontSize: 16, fontWeight: 500 },
+    titleStatus: { color: "#7C73C0", fontSize: 16, fontWeight: 500 },
     content: {
-        marginTop: 10,
+        borderLeftColor: "#7C73C0",
+        borderLeftWidth: 4,
+        marginTop: 6,
+        marginHorizontal: 8,
+        borderRadius: 6,
         backgroundColor: "#fff",
         height: "auto",
+        ...Platform.select({
+            ios: {
+                shadowColor: "black",
+                shadowOffset: { width: 0, height: 3 },
+                backgroundColor: 'white',
+                shadowOpacity: 0.2,
+                shadowRadius: 7,
+            },
+            android: {
+                elevation: 6, // Increase elevation to make the shadow more visible
+            }
+        }),
     },
     btnSubmit: {
         marginTop: 5,

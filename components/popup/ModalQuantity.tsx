@@ -1,35 +1,48 @@
+import { deliveryStaffService } from '@/service/deliveryStaff';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { View, Text, Modal, Button, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { View, Text, Modal, Button, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 
 interface IProps {
-    content: string
     modalVisible: boolean,
+    idOrder: any,
     setModalVisible: React.Dispatch<React.SetStateAction<boolean>>
-    colorB?: any
 }
 
-const ModalCustom = ({ content, modalVisible, setModalVisible, colorB }: IProps) => {
+const ModalQuantity = ({ modalVisible, idOrder, setModalVisible }: IProps) => {
+    const [quantity, setQuantity] = useState('1');
+
+    const onPress = async () => {
+        const res = await deliveryStaffService.patchConfirmReceiveSchedule(idOrder, quantity)
+        setModalVisible(!modalVisible)
+    }
+    const handleQuantityChange = (text: any) => {
+        if (/^\d*$/.test(text)) {
+            setQuantity(text);
+        }
+    };
     return (
         <View style={styles.container}>
-            <Button title="Show Modal" onPress={() => setModalVisible(true)} />
             <Modal
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Image source={{ uri: '/assets/images/ic_success.svg' }} />
-                        <Text style={[styles.modalText, colorB]}>{content}</Text>
+                        <Text style={styles.modalText}>Confirm actual quantity (kg)</Text>
+                        <TextInput
+                            style={styles.input}
+                            keyboardType="numeric"
+                            value={quantity}
+                            onChangeText={handleQuantityChange}
+                            placeholder="Enter quantity"
+                        />
                         <TouchableOpacity
                             style={styles.button}
-                            onPress={() => setModalVisible(!modalVisible)}
+                            onPress={onPress}
                         >
-                            <AntDesign name="close" size={18} color="#939185" />
+                            <Text style={styles.textStyle}>Confirm</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -50,9 +63,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 22,
     },
+    input: {
+        height: 40,
+        width: 60,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        paddingHorizontal: 8,
+        fontSize: 16,
+        marginBottom: 15,
+        textAlign: 'center',
+    },
     modalView: {
         margin: 20,
-        backgroundColor: 'white',
+        backgroundColor: '#fff',
         borderRadius: 20,
         padding: 35,
         alignItems: 'center',
@@ -69,8 +92,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 10,
         elevation: 2,
-        position: "absolute",
-        right: 0
+        backgroundColor: '#2196F3',
     },
     textStyle: {
         color: 'white',
@@ -79,8 +101,9 @@ const styles = StyleSheet.create({
     },
     modalText: {
         marginBottom: 15,
+        fontWeight: "600",
         textAlign: 'center',
     },
 });
 
-export default ModalCustom
+export default ModalQuantity

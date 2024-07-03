@@ -17,7 +17,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Trang chủ',
+          title: 'Home',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
           ),
@@ -26,7 +26,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="status"
         options={{
-          title: 'Trạng thái',
+          title: 'Go green, keep the Earth clean',
           headerShown: true,
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'stopwatch-sharp' : 'stopwatch-outline'} color={color} />
@@ -36,7 +36,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Tài khoản',
+          title: 'Account',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
           ),

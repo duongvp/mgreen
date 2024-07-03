@@ -1,3 +1,4 @@
+import { ScheduleStateType } from "@/constant/schedule";
 import { httpRequestUtil } from "@/utils/HttpRequestUtils";
 
 export const StaffService = {
@@ -9,9 +10,8 @@ export const StaffService = {
         return response
     },
 
-    get: async function () {
-        const response = await httpRequestUtil.get(this.Staff_Get_URL);
+    get: async function (scheduleState: ScheduleStateType) {
+        const response = await httpRequestUtil.get(`${this.Staff_Get_URL}?scheduleState=${scheduleState}`);
         return response
     },
-
 };

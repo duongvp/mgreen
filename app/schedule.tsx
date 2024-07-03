@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { Button, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { DatePickerCustom } from '@/components/DatePickerCustom';
 import { FormatTimeUtil } from '@/utils/FormatTimeUtil';
 import { houseHoldService } from '@/service/houseHold';
 import ModalCustom from '@/components/popup/Modal';
+import { TimePicker } from '@/components/TimePicker';
+import { DatePickerCustom } from '@/components/DatePickerCustom';
 
 export type selectDate = Date | undefined
 
@@ -12,6 +13,7 @@ export default function Page() {
     const currentDate = new Date()
     const [quantity, setQuantity] = useState('1');
     const [startTime, setStartTime] = useState<selectDate>(currentDate);
+    const [date, setDate] = useState<selectDate>(currentDate);
     const [endTime, setEndTime] = useState<selectDate>(new Date(currentDate.getTime() + 3600000));
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [contentPopup, setContentPopup] = useState("")
@@ -23,11 +25,19 @@ export default function Page() {
         }, 3000); // 3 seconds
     };
 
+    function convertToLocalTime(timestamp: number): Date {
+        // Create a new Date object using the timestamp
+        const date = new Date(timestamp * 1000); // Convert to milliseconds
+
+        // Return the local date
+        return date;
+    }
+
     const handleSechedule = async () => {
         try {
             if (startTime && endTime) {
                 const body = {
-                    date: new Date().toISOString(),
+                    date: date,
                     startTime: FormatTimeUtil.formatDateToTime(startTime),
                     endTime: FormatTimeUtil.formatDateToTime(endTime),
                     quantity: Number(quantity),
@@ -35,9 +45,9 @@ export default function Page() {
                 }
                 const res = await houseHoldService.post(body)
                 if (res.status == 200) {
-                    setContentPopup("Đặt lịch thành công")
+                    setContentPopup("Scheduled successfully")
                 } else {
-                    setContentPopup("Đặt lịch thất bại")
+                    setContentPopup("Scheduled failed")
                 }
                 showModal()
             }
@@ -66,23 +76,29 @@ export default function Page() {
 
     return (
         <View style={{ padding: 20 }}>
-            <Text style={[styles.label, styles.margin]}>Lựa chọn thời gian</Text>
+            <Text style={[styles.label, styles.margin]}>Choose time</Text>
+            <View style={{ display: "flex", flexDirection: "row", alignItems: "center", paddingRight: 10, marginBottom: 10 }}>
+                <Text style={[styles.label]}>Date:</Text>
+                <DatePickerCustom date={date} setDate={setDate} />
+            </View>
             <SafeAreaView style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <View style={{ display: "flex", flexDirection: "row", alignItems: "center", paddingRight: 10 }}>
-                    <Text style={[styles.label]}>Từ:</Text>
+                    <Text style={[styles.label]}>From:</Text>
                     {(startTime) && (
-                        <DatePickerCustom date={startTime} setDate={setStartTime} />
+                        <TimePicker date={startTime} setDate={setStartTime} />
                     )}
                 </View>
                 <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                    <Text style={[styles.label]}>Đến:</Text>
+                    <Text style={[styles.label]}>To:</Text>
                     {(endTime) && (
-                        <DatePickerCustom date={endTime} setDate={setEndTime} minimumDate={startTime} />
+                        <TimePicker date={endTime} setDate={setEndTime} minimumDate={startTime} />
                     )}
                 </View>
             </SafeAreaView>
-            <View style={{ paddingTop: 10 }} >
-                <Text style={[styles.label, styles.margin]}>Số lượng:</Text>
+            <View style={{ height: 1, width: "100%", backgroundColor: "#ccc", marginVertical: 24 }}></View>
+            <View>
+                <Text style={[styles.label, styles.margin]}>
+                    Weight(Kg):</Text>
                 <View style={styles.inputContainer}>
                     <TouchableOpacity onPress={decreaseQuantity} style={styles.button}>
                         <AntDesign name="minus" size={24} color="black" />
@@ -100,7 +116,7 @@ export default function Page() {
                 </View>
             </View>
             <TouchableOpacity style={styles.btnSubmit} onPress={handleSechedule}>
-                <Text style={{ textAlign: "center", color: "#fff", fontSize: 17 }}>Đặt lịch</Text>
+                <Text style={{ textAlign: "center", color: "#fff", fontSize: 17 }}>Order</Text>
             </TouchableOpacity>
             <ModalCustom content={contentPopup} modalVisible={modalVisible} setModalVisible={setModalVisible} />
         </View >
@@ -112,7 +128,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     margin: {
-        marginBottom: 10,
+        marginBottom: 6,
         fontWeight: 700,
 
     },
@@ -125,7 +141,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         height: 40,
-        marginTop: 15
+        marginTop: 12
     },
     input: {
         height: 40,

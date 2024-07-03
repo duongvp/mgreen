@@ -1,15 +1,18 @@
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
+
+import { StyleSheet, Image, Platform, View, Text, TextInput, TouchableOpacity, Button, ScrollView, RefreshControl } from 'react-native';
 import { ItemStatus } from './ItemStatus';
 import React, { useEffect, useState } from 'react';
 import { houseHoldService } from '@/service/houseHold';
 import { ScheduleStateType } from '@/constant/schedule';
 import useInforUserStore from '@/store/useStoreUser';
 import { UserRole } from '@/constant/user';
+import { deliveryStaffService } from '@/service/deliveryStaff';
 
 export default function ReciveScreen() {
-    const {role} = useInforUserStore((state:any) => state.role);
+    const role = useInforUserStore((state: any) => state.role);
     const [arr, setArr] = useState([]);
     const [refreshing, setRefreshing] = React.useState(false);
+    const [check, setCheck] = useState(false)
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -17,17 +20,26 @@ export default function ReciveScreen() {
             setRefreshing(false);
         }, 500);
     }, []);
+
     useEffect(() => {
         const fetchApi = async () => {
-            const res = await houseHoldService.get(ScheduleStateType.Pending)
+            let res
+            if (role == 0) {
+                res = await houseHoldService.get(ScheduleStateType.DeliveryAccepted)
+            } else if (role == 1) {
+                res = await deliveryStaffService.get(ScheduleStateType.DeliveryAccepted)
+            }
             const data = await res.json();
             setArr(data)
         }
         fetchApi()
-    }, [refreshing])
+    }, [refreshing, check])
 
-    const handleDeliveryStaffAccept = () => {
-      
+    const handleDeliveryStaffAccept = async (id: any) => {
+        const res = await deliveryStaffService.patchConfirmReceiveSchedule(id, 0)
+        console.log("🚀 ~ handleDeliveryStaffAccept ~ res:", res)
+        setCheck(!check)
+        // navigation.navigate('Đã nhận hàng')
     }
 
     return (
@@ -36,17 +48,17 @@ export default function ReciveScreen() {
         }>
             <View style={styles.container}>
                 {
-                    arr.map((item, index) => (
+                    arr.map((item: any, index) => (
                         <View key={index}>
                             <View style={styles.content}>
-                                <ItemStatus style={styles.titleStatus} title="Đã lấy hàng" item={item} />
+                                <ItemStatus style={styles.titleStatus} title="Đã xác nhận" item={item} />
                                 {
                                     role == UserRole.DeliveryStaff && (
-                                    <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", paddingBottom: 10, paddingRight: 10, borderTopWidth: 1, borderColor: "#ccc" }}>
-                                        <TouchableOpacity style={styles.btnSubmit} onPress={handleDeliveryStaffAccept}>
-                                            <Text style={{ textAlign: "center", color: "#fff", fontSize: 17 }}>Lấy Hàng</Text>
-                                        </TouchableOpacity>
-                                    </View>)
+                                        <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", paddingBottom: 10, paddingRight: 10, borderTopWidth: 1, borderColor: "#ccc" }}>
+                                            <TouchableOpacity style={styles.btnSubmit} onPress={() => handleDeliveryStaffAccept(item.id)}>
+                                                <Text style={{ textAlign: "center", color: "#fff", fontSize: 17 }}>Lấy Hàng</Text>
+                                            </TouchableOpacity>
+                                        </View>)
                                 }
                             </View>
                         </View>
@@ -64,7 +76,7 @@ const styles = StyleSheet.create({
         height: "100%",
         gap: 10,
     },
-    titleStatus: { color: "rgb(29, 185, 84)", fontSize: 16, fontWeight: 500 },
+    titleStatus: { color: "#008DDA", fontSize: 16, fontWeight: 500 },
     content: {
         marginTop: 10,
         backgroundColor: "#fff",

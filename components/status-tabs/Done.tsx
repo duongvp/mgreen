@@ -1,15 +1,18 @@
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
+import { StyleSheet, Image, Platform, View, Text, TextInput, TouchableOpacity, Button, ScrollView, RefreshControl } from 'react-native';
 import { ItemStatus } from './ItemStatus';
 import React, { useEffect, useState } from 'react';
 import { houseHoldService } from '@/service/houseHold';
 import { ScheduleStateType } from '@/constant/schedule';
 import useInforUserStore from '@/store/useStoreUser';
 import { UserRole } from '@/constant/user';
+import { deliveryStaffService } from '@/service/deliveryStaff';
+import { StaffService } from '@/service/staff';
 
 export default function DoneScreen() {
-    const {role} = useInforUserStore((state:any) => state.role);
+    const role = useInforUserStore((state: any) => state.role);
     const [arr, setArr] = useState([]);
     const [refreshing, setRefreshing] = React.useState(false);
+    const [check, setCheck] = useState(false)
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -17,18 +20,22 @@ export default function DoneScreen() {
             setRefreshing(false);
         }, 500);
     }, []);
+
     useEffect(() => {
         const fetchApi = async () => {
-            const res = await houseHoldService.get(ScheduleStateType.Pending)
+            let res
+            if (role == UserRole.HouseHold) {
+                res = await houseHoldService.get(ScheduleStateType.StaffReceived)
+            } else if (role == UserRole.DeliveryStaff) {
+                res = await deliveryStaffService.get(ScheduleStateType.StaffReceived)
+            } else if (role == UserRole.CollectorStaff) {
+                res = await StaffService.get(ScheduleStateType.StaffReceived)
+            }
             const data = await res.json();
             setArr(data)
         }
         fetchApi()
-    }, [refreshing])
-
-    const handleDeliveryStaffAccept = () => {
-      
-    }
+    }, [refreshing, check])
 
     return (
         <ScrollView refreshControl={
@@ -36,18 +43,10 @@ export default function DoneScreen() {
         }>
             <View style={styles.container}>
                 {
-                    arr.map((item, index) => (
-                        <View key={index}>
-                            <View style={styles.content}>
-                                <ItemStatus style={styles.titleStatus} title="Đã lấy hàng" item={item} />
-                                {
-                                    role == UserRole.DeliveryStaff && (
-                                    <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", paddingBottom: 10, paddingRight: 10, borderTopWidth: 1, borderColor: "#ccc" }}>
-                                        <TouchableOpacity style={styles.btnSubmit} onPress={handleDeliveryStaffAccept}>
-                                            <Text style={{ textAlign: "center", color: "#fff", fontSize: 17 }}>Lấy Hàng</Text>
-                                        </TouchableOpacity>
-                                    </View>)
-                                }
+                    arr.map((item: any, index) => (
+                        <View style={styles.content}>
+                            <View key={index}>
+                                <ItemStatus style={styles.titleStatus} title="Success" item={item} />
                             </View>
                         </View>
                     ))
@@ -63,18 +62,35 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         height: "100%",
         gap: 10,
+        marginTop: 7
     },
-    titleStatus: { color: "rgb(29, 185, 84)", fontSize: 16, fontWeight: 500 },
-    content: {
-        marginTop: 10,
-        backgroundColor: "#fff",
-        height: "auto",
-    },
+    titleStatus: { color: "green", fontSize: 16, fontWeight: 500 },
     btnSubmit: {
         marginTop: 5,
         backgroundColor: "#81A263",
         width: 85,
         paddingVertical: 10,
         borderRadius: 5,
-    }
+    },
+    content: {
+        borderLeftColor: "green",
+        borderLeftWidth: 4,
+        marginTop: 6,
+        marginHorizontal: 8,
+        borderRadius: 6,
+        backgroundColor: "#fff",
+        height: "auto",
+        ...Platform.select({
+            ios: {
+                shadowColor: "black",
+                shadowOffset: { width: 0, height: 3 },
+                backgroundColor: 'white',
+                shadowOpacity: 0.2,
+                shadowRadius: 7,
+            },
+            android: {
+                elevation: 6, // Increase elevation to make the shadow more visible
+            }
+        }),
+    },
 });
