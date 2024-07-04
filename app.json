@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kaine12.collectiontrash"
     },
     "android": {
       "adaptiveIcon": {
@@ -35,6 +36,9 @@
         {
           "android": {
             "usesCleartextTraffic": true
+          },
+          "ios": {
+            "flipper": true
           }
         }
       ]
