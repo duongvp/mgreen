@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
 import { TotalUserPieChart } from '../chart/TotalUserPieChart'
 import { TotalTrashChart } from '../chart/TotalTrashChart'
 import { dashBoardService } from '@/service/dashboard'
@@ -10,7 +10,7 @@ export interface IdataAcc {
     title: string,
     quantity: number
 }
-
+const { width } = Dimensions.get('window');
 export const DashBoard = () => {
     const dataChart = [1, 2, 3]
     const [dataAccChart, setDataAccChart] = useState<IdataAcc[]>([])

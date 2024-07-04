@@ -32,6 +32,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="schedule" options={{ headerShown: true, title: "Create Schedules" }} />
+        <Stack.Screen name="voucher" options={{ headerShown: true, title: "Voucher" }} />
         <Stack.Screen name="register" options={{ headerShown: false }} />
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />

@@ -41,7 +41,7 @@ export const ItemStatus = ({ style, title, item }: Iprops) => {
             <View style={{ display: "flex", justifyContent: "space-between", flexDirection: "row", width: "100%" }}>
                 <View>
                     <Text style={[styles.label, { fontWeight: 600 }]}>{`${item?.houseHold?.firstName ?? "Anonymouse"} ${item?.houseHold?.lastName ?? ""}`}</Text>
-                    <Text style={[styles.title, { fontSize: 14, marginTop: 4 }]}>{item.address || item.houseHold?.address || "Collect at home"}</Text>
+                    <Text style={[styles.title, { fontSize: 14, marginTop: 4 }]}>{item.address || item.houseHold?.address || "Collect from home"}</Text>
                     {/* <Text style={{ color: "rgb(47 45 45)", fontSize: 15, fontWeight: 500 }}>Weight: {item?.quantity} kg</Text> */}
                 </View>
                 <Text style={style}>{title}</Text>
@@ -59,12 +59,8 @@ export const ItemStatus = ({ style, title, item }: Iprops) => {
                 </View>
                 <View style={{ display: "flex", justifyContent: "space-between", flexDirection: "row", width: "100%" }}>
                     <Text style={styles.label}>Time:</Text>
-                    <Text style={styles.title}>{item?.startTime} - {item?.endTime}</Text>
+                    <Text style={styles.title}>{FormatTimeUtil.convertTimeRange(`${item?.startTime} - ${item?.endTime})`)}</Text>
                 </View>
-                {/* <View style={{ display: "flex", justifyContent: "space-between", flexDirection: "row", width: "100%" }}>
-                    <Text style={styles.label}>Address:</Text>
-                    <Text style={styles.title}>{item.houseHold?.address ?? "Collect at home"}</Text>
-                </View> */}
             </View>
         </View>
     )

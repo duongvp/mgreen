@@ -3,7 +3,7 @@ import { TextInput } from '@/components/TextInput';
 import { FontAwesome, AntDesign } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { StyleSheet, Image, Platform, View, Text, TouchableOpacity, Button, ScrollView } from 'react-native';
+import { StyleSheet, Image, Platform, View, Text, TouchableOpacity, Button, ScrollView, Dimensions } from 'react-native';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
@@ -11,6 +11,8 @@ import { router } from 'expo-router';
 import { ProfileService } from '@/service/profile';
 import ModalCustom from '@/components/popup/Modal';
 import useInforUserStore from '@/store/useStoreUser';
+
+const height = Dimensions.get('window').height
 
 interface IFormValues {
   firstName?: string,
@@ -30,19 +32,17 @@ const schema = yup.object().shape({
 
 export default function TabTwoScreen() {
   const { userInfo } = useInforUserStore()
-  console.log("🚀 ~ TabTwoScreen ~ userInfo:", userInfo)
   const [contentPopup, setContentPopup] = useState("")
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const { control, handleSubmit, formState: { errors } } = useForm<IFormValues>({
     resolver: yupResolver(schema),
     defaultValues: {
       firstName: userInfo?.firstName,
-      lastName: userInfo?.lastName,
+      lastName: userInfo?.firstName + " " + userInfo?.lastName,
       address: userInfo?.address,
       phoneNumber: userInfo?.phoneNumber
     }
   });
-
   const handleLogOut = () => {
     router.back()
     router.replace("/")
@@ -88,61 +88,52 @@ export default function TabTwoScreen() {
           {/* <Text style={{ color: "#1DB954", fontSize: 18, fontWeight: 500 }}>Nguyen Van Cuong</Text> */}
         </View>
         <View style={styles.content}>
-          <View>
-            <View style={[styles.userText]}>
-              <AntDesign name="user" size={24} color="#1DB954" />
-              <TextInput
-                styleB={{ borderBottomWidth: 0 }}
-                name='firstName'
-                control={control}
-                placeholder='Please enter first name'
-              />
+          <View style={{ display: "flex", height: "100%", justifyContent: "space-between" }}>
+            <View>
+              <View style={[styles.userText]}>
+                <AntDesign name="user" size={24} color="#1DB954" />
+                <TextInput
+                  styleB={{ borderBottomWidth: 0 }}
+                  name='lastName'
+                  control={control}
+                  placeholder='Please enter your name'
+                />
+              </View>
+              <View style={[styles.userText]}>
+                <AntDesign name="phone" size={24} color="#1DB954" />
+                <TextInput
+                  styleB={{ borderBottomWidth: 0 }}
+                  name='phoneNumber'
+                  control={control}
+                  placeholder='Please enter the phone number'
+                />
+              </View>
+              <View style={[styles.userText]}>
+                <AntDesign name="calendar" size={24} color="#1DB954" />
+                <TextInput
+                  styleB={{ borderBottomWidth: 0 }}
+                  name='address'
+                  control={control}
+                  placeholder='Please enter your address'
+                />
+              </View>
             </View>
-            <View style={[styles.userText]}>
-              <AntDesign name="user" size={24} color="#1DB954" />
-              <TextInput
-                styleB={{ borderBottomWidth: 0 }}
-                name='lastName'
-                control={control}
-                placeholder='Please enter last name'
-              />
-            </View>
-            <View style={[styles.userText]}>
-              <AntDesign name="phone" size={24} color="#1DB954" />
-              <TextInput
-                styleB={{ borderBottomWidth: 0 }}
-                name='phoneNumber'
-                control={control}
-                placeholder='Please enter the phone number'
-              />
-            </View>
-            <View style={[styles.userText]}>
-              <AntDesign name="calendar" size={24} color="#1DB954" />
-              <TextInput
-                styleB={{ borderBottomWidth: 0 }}
-                name='address'
-                control={control}
-                placeholder='Please enter your address'
-              />
+            <View>
+              <TouchableOpacity
+                style={styles.loginScreenButton}
+                onPress={handleSubmit(onSubmit, onError)}>
+                <Text style={styles.loginText}>Update</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.loginScreenButton, styles.logoutBtn]}
+                onPress={handleLogOut}>
+                <Text style={[styles.loginText, styles.logoutText]}>Log Out</Text>
+              </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity
-            style={styles.loginScreenButton}
-            onPress={handleSubmit(onSubmit, onError)}>
-            <Text style={styles.loginText}>Update</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.loginScreenButton, styles.logoutBtn]}
-            onPress={handleLogOut}>
-            <Text style={[styles.loginText, styles.logoutText]}>Log Out</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          {/* Native modals have dark backgrounds on iOS, set the status bar to light content. */}
-          <StatusBar style='dark' />
+          <ModalCustom content={contentPopup} modalVisible={modalVisible} setModalVisible={setModalVisible} />
         </View>
       </View >
-      <ModalCustom content={contentPopup} modalVisible={modalVisible} setModalVisible={setModalVisible} />
     </ScrollView>
   );
 }
@@ -172,6 +163,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 10,
     flex: 1,
+    height: height - 200,
     justifyContent: 'space-between',
     paddingBottom: 10
   },

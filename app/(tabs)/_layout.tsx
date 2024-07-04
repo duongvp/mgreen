@@ -26,7 +26,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="status"
         options={{
-          title: 'Go green, keep the Earth clean',
+          title: 'Operation',
           headerShown: true,
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'stopwatch-sharp' : 'stopwatch-outline'} color={color} />

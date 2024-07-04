@@ -56,7 +56,7 @@ export default function PendingScreen() {
                                 <ItemStatus style={styles.titleStatus} title="Pending" item={item} />
                                 {
                                     role == UserRole.DeliveryStaff && (
-                                        <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", paddingVertical: 3, paddingBottom: 6, marginHorizontal: 12, borderTopWidth: 1, borderColor: "#F6F5F5" }}>
+                                        <View key={`btn-${index}`} style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", paddingVertical: 3, paddingBottom: 6, marginHorizontal: 12, borderTopWidth: 1, borderColor: "#F6F5F5" }}>
                                             <TouchableOpacity style={styles.btnSubmit} onPress={() => handleDeliveryStaffAccept(item.id)}>
                                                 <Text style={{ textAlign: "center", color: "#fff", fontSize: 14, fontWeight: 500 }}>Accept</Text>
                                             </TouchableOpacity>

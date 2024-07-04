@@ -12,7 +12,6 @@ interface IProps {
 const ModalCustom = ({ content, modalVisible, setModalVisible, colorB }: IProps) => {
     return (
         <View style={styles.container}>
-            <Button title="Show Modal" onPress={() => setModalVisible(true)} />
             <Modal
                 animationType="slide"
                 transparent={true}

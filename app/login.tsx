@@ -1,11 +1,13 @@
 import { TextInput } from '@/components/TextInput';
 import { Link, router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { StyleSheet, Image, View, Text, TouchableOpacity } from 'react-native';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AuthService } from '@/service/auth';
+import { ProfileService } from '@/service/profile';
+import useInforUserStore from '@/store/useStoreUser';
 
 
 interface IFormValues {
@@ -25,6 +27,8 @@ const schema = yup.object().shape({
 });
 
 export default function Page() {
+	const { setUserInfo } = useInforUserStore();
+	const [checkApiRole, setCheckApiRole] = useState(false)
 	const [err, setErr] = useState('')
 	const { control, handleSubmit, formState: { errors } } = useForm<IFormValues>({
 		resolver: yupResolver(schema),
@@ -39,8 +43,7 @@ export default function Page() {
 			const res = await AuthService.login(data);
 			switch (res.status) {
 				case 200:
-					router.back()
-					router.replace('/home')
+					setCheckApiRole(true)
 					break;
 				case 500:
 					setErr('OOP! Connect server timeout !')
@@ -59,10 +62,28 @@ export default function Page() {
 		console.error(error)
 	}
 
+	const fetchApi = async () => {
+		const res = await ProfileService.get();
+		const data = await res.json()
+		setUserInfo(data)
+		router.back()
+		router.replace('/home')
+	}
+
+	useEffect(() => {
+		checkApiRole && fetchApi()
+	}, [checkApiRole])
+
 	return (
 		<View style={styles.container}>
 			<View>
 				<View>
+					<Image
+						style={styles.banner}
+						source={require('../assets/images/login-banner.jpg')}
+					/>
+				</View>
+				{/* <View>
 					<Image
 						style={styles.banner}
 						source={require('../assets/images/image1.png')}
@@ -71,7 +92,7 @@ export default function Page() {
 						style={styles.bannerAbstract}
 						source={require('../assets/images/Pattern.png')}
 					/>
-				</View>
+				</View> */}
 				<View style={styles.title}>
 					<Text style={[styles.titleHeader, styles.login]}>Login here</Text>
 				</View>

@@ -1,11 +1,13 @@
 import { TextInput } from '@/components/TextInput';
 import { Link, router } from 'expo-router';
-import { StyleSheet, Image, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { AuthService } from '@/service/auth';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { ProfileService } from '@/service/profile';
+import useInforUserStore from '@/store/useStoreUser';
 
 interface IFormValues {
     email: string
@@ -28,6 +30,8 @@ const schema = yup.object().shape({
 });
 
 export default function Page() {
+    const { setUserInfo } = useInforUserStore();
+    const [checkApiRole, setCheckApiRole] = useState(false)
     const [err, setErr] = useState('')
     const { control, handleSubmit, formState: { errors } } = useForm<IFormValues>({
         resolver: yupResolver(schema),
@@ -58,54 +62,74 @@ export default function Page() {
         console.error(error)
     }
 
+    const fetchApi = async () => {
+        const res = await ProfileService.get();
+        const data = await res.json()
+        setUserInfo(data)
+        router.back()
+        router.replace('/home')
+    }
+
+    useEffect(() => {
+        checkApiRole && fetchApi()
+    }, [checkApiRole])
+
+
     return (
-        <View style={styles.container}>
-            <View>
+        <ScrollView>
+            <View style={styles.container}>
                 <View>
-                    <Image
-                        style={styles.banner}
-                        source={require('../assets/images/image1.png')}
-                    />
-                    <Image
-                        style={styles.bannerAbstract}
-                        source={require('../assets/images/Pattern.png')}
-                    />
+                    <View>
+                        <Image
+                            style={styles.banner}
+                            source={require('../assets/images/login-banner.jpg')}
+                        />
+                    </View>
+                    {/* <View>
+					<Image
+						style={styles.banner}
+						source={require('../assets/images/image1.png')}
+					/>
+					<Image
+						style={styles.bannerAbstract}
+						source={require('../assets/images/Pattern.png')}
+					/>
+				</View> */}
+                    <View style={styles.title}>
+                        <Text style={[styles.titleHeader, styles.login]}>Login here</Text>
+                    </View>
                 </View>
-                <View style={styles.title}>
-                    <Text style={[styles.titleHeader, styles.login]}>Create Account</Text>
-                    <Text style={[styles.titleHeader]}>Create an account so you can {"\n"}explore all the existing jobs</Text>
+                <View style={{ position: 'absolute', top: 202, left: 29, right: 29, padding: 30, display: 'flex', flexDirection: 'column', gap: 28, backgroundColor: '#fff', borderRadius: 15 }}>
+                    <TextInput
+                        label='Email'
+                        name='email'
+                        control={control}
+                        placeholder='xxxxx@gmail.com'
+                    />
+                    <TextInput
+                        label='Password'
+                        name='password'
+                        control={control}
+                        placeholder="Enter your password"
+                        isShowEye={true} />
+                    <TextInput
+                        label='Confirm Password'
+                        name='repassword'
+                        control={control}
+                        placeholder="Re-Enter your password"
+                        isShowEye={true} />
+                    <View>
+                        <TouchableOpacity onPress={handleSubmit(onSubmit, onError)} style={[styles.button, styles.buttonLogin]}>
+                            <Text style={[styles.buttonText, styles.buttonTextLogin]}>Sign up</Text>
+                        </TouchableOpacity>
+                        {err && <Text style={styles.labelError}>{err}</Text>}
+                    </View>
+                    <Link href={'/login'} style={{ textAlign: 'center' }}>
+                        <Text style={{ fontSize: 14, color: '#494949' }}>Already have an account ?</Text>
+                    </Link>
                 </View>
             </View>
-            <View style={{ position: 'absolute', top: 202, left: 29, right: 29, padding: 30, display: 'flex', flexDirection: 'column', gap: 28, backgroundColor: '#fff', borderRadius: 15 }}>
-                <TextInput
-                    label='Email'
-                    name='email'
-                    control={control}
-                    placeholder='xxxxx@gmail.com'
-                />
-                <TextInput
-                    label='Password'
-                    name='password'
-                    control={control}
-                    placeholder="Enter your password"
-                    isShowEye={true} />
-                <TextInput
-                    label='Confirm Password'
-                    name='repassword'
-                    control={control}
-                    placeholder="Re-Enter your password"
-                    isShowEye={true} />
-                <View>
-                    <TouchableOpacity onPress={handleSubmit(onSubmit, onError)} style={[styles.button, styles.buttonLogin]}>
-                        <Text style={[styles.buttonText, styles.buttonTextLogin]}>Sign up</Text>
-                    </TouchableOpacity>
-                    {err && <Text style={styles.labelError}>{err}</Text>}
-                </View>
-                <Link href={'/login'} style={{ textAlign: 'center' }}>
-                    <Text style={{ fontSize: 14, color: '#494949' }}>Already have an account ?</Text>
-                </Link>
-            </View>
-        </View>
+        </ScrollView>
     );
 }
 

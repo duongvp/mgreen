@@ -58,7 +58,7 @@ export const TotalTrashChart = () => {
                             return (
                                 <View style={styles.dropdownButtonStyle}>
                                     <Text style={styles.dropdownButtonTxtStyle}>
-                                        {(selectedItem && selectedItem.title) || 'Select your mood'}
+                                        {(selectedItem && selectedItem.title) || 'select time'}
                                     </Text>
                                     <Ionicons name={isOpened ? 'chevron-up' : 'chevron-down'} style={styles.dropdownButtonArrowStyle} />
                                 </View>

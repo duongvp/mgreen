@@ -69,7 +69,7 @@ export const HomeUi = () => {
                 <TouchableOpacity style={[{ flex: 1 }, styles.boxShadow]} onPress={handleSchedule}>
                     <View style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 6, paddingHorizontal: 16, paddingVertical: 12, borderRadius: 6, backgroundColor: "#81A263" }}>
                         <AntDesign name="calendar" size={24} color="#fff" />
-                        <Text style={{ textAlign: "center", color: "#fff" }}>Create Schedules</Text>
+                        <Text style={{ textAlign: "center", color: "#fff" }}>Create Schedule</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity style={[{ flex: 1 }, styles.boxShadow]} onPress={handleVoucher}>

@@ -25,10 +25,9 @@ export default function StatusScreen() {
                 tabBarLabelStyle: { fontSize: 15 },
             }}>
                 <Tab.Screen name="Pending" component={PendingScreen} />
-                <Tab.Screen name="Confirm" component={DeliveryAcceptedScreen} />
-                {/* <Tab.Screen name="Đã nhận hàng" component={ReciveScreen} /> */}
-                <Tab.Screen name="Delivering" component={StaffReciveScreen} />
-                <Tab.Screen name="Success" component={CancelScreen} />
+                <Tab.Screen name="Confirmed" component={DeliveryAcceptedScreen} />
+                <Tab.Screen name="Delivered" component={StaffReciveScreen} />
+                <Tab.Screen name="Done" component={CancelScreen} />
             </Tab.Navigator>
         </View >
     )

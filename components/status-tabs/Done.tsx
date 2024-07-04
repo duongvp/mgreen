@@ -46,7 +46,7 @@ export default function DoneScreen() {
                     arr.map((item: any, index) => (
                         <View style={styles.content}>
                             <View key={index}>
-                                <ItemStatus style={styles.titleStatus} title="Success" item={item} />
+                                <ItemStatus style={styles.titleStatus} title="Done" item={item} />
                             </View>
                         </View>
                     ))

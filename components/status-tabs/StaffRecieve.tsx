@@ -52,7 +52,7 @@ export default function StaffReciveScreen() {
                     arr.map((item: any, index) => (
                         <View key={index}>
                             <View style={styles.content}>
-                                <ItemStatus style={styles.titleStatus} title="Delivering" item={item} />
+                                <ItemStatus style={styles.titleStatus} title="Delivered" item={item} />
                                 {/* {
                                     role == UserRole.CollectorStaff && (
                                         <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", paddingBottom: 10, paddingRight: 10, borderTopWidth: 1, borderColor: "#ccc" }}>

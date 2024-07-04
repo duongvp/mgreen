@@ -25,14 +25,6 @@ export default function Page() {
         }, 3000); // 3 seconds
     };
 
-    function convertToLocalTime(timestamp: number): Date {
-        // Create a new Date object using the timestamp
-        const date = new Date(timestamp * 1000); // Convert to milliseconds
-
-        // Return the local date
-        return date;
-    }
-
     const handleSechedule = async () => {
         try {
             if (startTime && endTime) {
@@ -52,7 +44,7 @@ export default function Page() {
                 showModal()
             }
         } catch (error) {
-            setContentPopup("Đặt lịch thất bại")
+            setContentPopup("Scheduled failed")
             showModal()
         }
     }

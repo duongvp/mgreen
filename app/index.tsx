@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { Image, StyleSheet, Platform, ImageBackground, Text, View, Button, Alert, TouchableOpacity } from 'react-native';
 
-const image = '../assets/images/pexels-leonid.png';
+const image = '../assets/images/baner.jpg';
 
 export default function Page() {
     const handlePress = () => {
@@ -15,10 +15,10 @@ export default function Page() {
     return (
         <View style={styles.container}>
             <ImageBackground source={require(image)} resizeMode="cover" style={styles.image}>
-                <Image source={require('../assets/images/rectangle.png')} style={styles.tinyLogo} />
+                {/* <Image source={require('../assets/images/rectangle.png')} style={styles.tinyLogo} /> */}
                 <View style={styles.content}>
-                    <Text style={styles.title}>Viet Nam Green</Text>
-                    <Text style={styles.text}>Today, recycle for a better tommorow!</Text>
+                    <Text style={styles.title}>VietNam Green</Text>
+                    <Text style={styles.text}>Let’s work together for sustainable future</Text>
                     <TouchableOpacity onPress={handlePress} style={[styles.button, styles.buttonLogin]}>
                         <Text style={[styles.buttonText, styles.buttonTextLogin]}>Login</Text>
                     </TouchableOpacity>

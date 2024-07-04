@@ -53,7 +53,7 @@ export default function DeliveryAcceptedScreen() {
                     arr.map((item: any, index) => (
                         <View key={index}>
                             <View style={styles.content}>
-                                <ItemStatus style={styles.titleStatus} title="Confirm" item={item} />
+                                <ItemStatus style={styles.titleStatus} title="Confirmed" item={item} />
                                 {/* {
                                     role == UserRole.DeliveryStaff && (
                                         <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", paddingBottom: 10, paddingRight: 10, borderTopWidth: 1, borderColor: "#ccc" }}>
@@ -64,7 +64,7 @@ export default function DeliveryAcceptedScreen() {
                                 } */}
                                 {
                                     role == UserRole.DeliveryStaff && (
-                                        <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", paddingVertical: 3, paddingBottom: 6, marginHorizontal: 12, borderTopWidth: 1, borderColor: "#F6F5F5" }}>
+                                        <View key={`btn-${index}`} style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", paddingVertical: 3, paddingBottom: 6, marginHorizontal: 12, borderTopWidth: 1, borderColor: "#F6F5F5" }}>
                                             <TouchableOpacity style={styles.btnSubmit} onPress={() => handleDeliveryStaffAccept(item.id)}>
                                                 <Text style={{ textAlign: "center", color: "#fff", fontSize: 14, fontWeight: 500 }}>Received</Text>
                                             </TouchableOpacity>

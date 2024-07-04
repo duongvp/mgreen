@@ -8,17 +8,8 @@ import { ScrollView, View } from 'react-native';
 
 
 export default function HomeScreen() {
-  const { role, setUserInfo } = useInforUserStore();
-  const fetchApi = async () => {
-    const res = await ProfileService.get();
-    const data = await res.json()
-    setUserInfo(data)
-  }
+  const { role } = useInforUserStore();
 
-  useEffect(() => {
-    fetchApi()
-  }, [])
-  console.log('role !== UserRole.CollectorStaff', role !== UserRole.CollectorStaff);
   return (
     <ScrollView>
       {
